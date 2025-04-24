@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
+  "keywords": [
+    "health",
+    "information",
+    "system",
+    "management",
+    "software",
+    "engineering"
+  ],
   "author": "Enoch Garoli",
   "license": "ISC",
   "repository": {
@@ -16,5 +25,22 @@
     "url": "https://github.com/enkiga/CEMA-HIS/issues"
   },
   "homepage": "https://github.com/enkiga/CEMA-HIS#readme",
-  "description": "This project is a basic health information system developed as part of a Software Engineering Intern Task. It allows a doctor (system user) to manage clients and enroll them in various health programs."
+  "description": "This project is a basic health information system developed as part of a Software Engineering Intern Task. It allows a doctor (system user) to manage clients and enroll them in various health programs.",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "http-errors": "^2.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3"
+  }
 }
