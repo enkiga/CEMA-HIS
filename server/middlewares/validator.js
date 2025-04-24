@@ -20,3 +20,15 @@ exports.registrationSchema = Joi.object({
       new RegExp("^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};'\":\\\\|,.<>/?]).+$")
     ),
 });
+
+exports.loginSchema = Joi.object({
+  email: Joi.string()
+    .email()
+    .required()
+    .min(6)
+    .max(60)
+    .email({
+      tlds: { allow: ["com", "net"] },
+    }),
+  password: Joi.string().required().min(8).max(30),
+});
