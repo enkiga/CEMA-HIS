@@ -1,7 +1,7 @@
 // Import required modules
 const jwt = require("jsonwebtoken"); // Import JWT for token generation
 const Doctor = require("../models/doctor"); // Import the Doctor modelconst { StatusCodes } = require("http-status-codes"); // Import status codes for HTTP responses
-const { doHash } = require("../utils/hashing"); // Import hashing utility functions
+const { doHash,doHashValidation } = require("../utils/hashing"); // Import hashing utility functions
 const { registrationSchema, loginSchema } = require("../middlewares/validator"); // Import validation schema
 const doctor = require("../models/doctor");
 
@@ -62,7 +62,7 @@ exports.signup = async (req, res) => {
 
 // Handle signin process for doctors
 exports.signin = async (req, res) => {
-  const { email, password } = req.body; // Destructure the request body to get email and password
+  const { email, password } = req.body;
 
   // try catch block to handle errors
   try {
@@ -106,7 +106,7 @@ exports.signin = async (req, res) => {
         doctorId: existingDoctor._id,
         email: existingDoctor.email,
       },
-      process.env.JWT_SECRET,
+      process.env.TOKEN_SECRET,
       {
         expiresIn: "8h",
       }
@@ -128,6 +128,7 @@ exports.signin = async (req, res) => {
           id: existingDoctor._id,
           name: existingDoctor.name,
           email: existingDoctor.email,
+          password: undefined, // Do not send the password in the response
         },
         token: token, // Send the token in the response
       });
