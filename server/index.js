@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 
+const authRouter = require("./routers/authRouter");
+
 // Setting up Express
 const app = express();
 app.use(express.json());
@@ -17,9 +19,12 @@ mongoose
   .catch((err) => console.error(`MongoDB connection error: ${err}`));
 
 // Test if server is running
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Server is running!");
+// });
+
+// Set up routes
+app.use("/api/v1/auth", authRouter); // Authentication routes
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
