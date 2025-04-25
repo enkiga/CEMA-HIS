@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 const authRouter = require("./routers/authRouter");
 const programRouter = require("./routers/programRouter");
+const clientRouter = require("./routers/clientRouter");
 
 // Setting up Express
 const app = express();
@@ -27,6 +28,7 @@ mongoose
 // Set up routes
 app.use("/api/v1/auth", authRouter); // Authentication routes
 app.use("/api/v1/program", programRouter); // Program routes
+app.use("/api/v1/client", clientRouter); // Client routes
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
