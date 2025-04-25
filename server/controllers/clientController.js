@@ -1,5 +1,7 @@
 const { clientCreationSchema } = require("../middlewares/validator");
 const Client = require("../models/client"); // Import the Client model
+const Program = require("../models/Program"); // Import the Program model
+const mongoose = require("mongoose"); // Import mongoose for ObjectId validation
 
 exports.addClient = async (req, res) => {
   const { name, email } = req.body; // Destructure the request body to get client details
@@ -105,13 +107,24 @@ exports.getClientById = async (req, res) => {
 
 // Get doctor who created the client enroll the clent in a program
 exports.enrollClientInProgram = async (req, res) => {
-  // get client id from parameters
-  const { id } = req.params; // Get the client ID from the request parameters
-  const { programId } = req.body; // Get the program ID from the request body
+  const { id: clientId } = req.params;
+  const { programId } = req.body;
 
   try {
-    // check if the client exists
-    const client = await Client.findById(id);
+    // Validate programId
+    if (!mongoose.Types.ObjectId.isValid(programId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Program ID format",
+      });
+    }
+
+    // Check if both client and program exist
+    const [client, program] = await Promise.all([
+      Client.findById(clientId),
+      Program.findById(programId),
+    ]);
+
     if (!client) {
       return res.status(404).json({
         success: false,
@@ -119,34 +132,198 @@ exports.enrollClientInProgram = async (req, res) => {
       });
     }
 
-    // check if the program ID is valid
-    if (!programId) {
-      return res.status(400).json({
+    if (!program) {
+      return res.status(404).json({
         success: false,
-        message: "Program ID is required",
+        message: "Program not found",
       });
     }
 
-    // check if the client is already enrolled in the program
+    // Check existing enrollment in both directions
     if (client.programEnrolled.includes(programId)) {
       return res.status(400).json({
         success: false,
-        message: "Client is already enrolled in this program",
+        message: "Client already enrolled in this program",
       });
     }
 
-    // enroll the client in the program
-    // Add the program ID to the client's enrolled programs together with the program name and description
-    client.programEnrolled.push(programId); // Add the program ID to the client's enrolled programs
-    await client.save(); // Save the updated client to the database
+    if (program.clientsEnrolled.includes(clientId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Client already exists in program enrollment list",
+      });
+    }
+
+    // Update both documents in a transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      // Add program to client
+      await Client.findByIdAndUpdate(
+        clientId,
+        { $addToSet: { programEnrolled: programId } },
+        { session }
+      );
+
+      // Add client to program
+      await Program.findByIdAndUpdate(
+        programId,
+        { $addToSet: { clientsEnrolled: clientId } },
+        { session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      // Get updated data with population
+      const updatedClient = await Client.findById(clientId).populate(
+        "programEnrolled",
+        "name description"
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Enrollment successful",
+        data: updatedClient,
+      });
+    } catch (transactionError) {
+      await session.abortTransaction();
+      session.endSession();
+      throw transactionError;
+    }
+  } catch (error) {
+    console.error("Enrollment error:", error);
+    return res.status(500).json({
+      success: false,
+      message: `Server error: ${error.message}`,
+    });
+  }
+};
+
+// Unenroll client from a program
+exports.unenrollClientFromProgram = async (req, res) => {
+  const { id: clientId } = req.params;
+  const { programId } = req.body;
+
+  try {
+    // Validate programId
+    if (!mongoose.Types.ObjectId.isValid(programId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Program ID format",
+      });
+    }
+
+    // Check if both client and program exist
+    const [client, program] = await Promise.all([
+      Client.findById(clientId),
+      Program.findById(programId),
+    ]);
+
+    if (!client) {
+      return res.status(404).json({
+        success: false,
+        message: "Client not found",
+      });
+    }
+
+    if (!program) {
+      return res.status(404).json({
+        success: false,
+        message: "Program not found",
+      });
+    }
+
+    // Check existing enrollment in both directions
+    if (!client.programEnrolled.includes(programId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Client not enrolled in this program",
+      });
+    }
+
+    if (!program.clientsEnrolled.includes(clientId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Client does not exist in program enrollment list",
+      });
+    }
+
+    // Update both documents in a transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      // Remove program from client
+      await Client.findByIdAndUpdate(
+        clientId,
+        { $pull: { programEnrolled: programId } },
+        { session }
+      );
+
+      // Remove client from program
+      await Program.findByIdAndUpdate(
+        programId,
+        { $pull: { clientsEnrolled: clientId } },
+        { session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      // Get updated data with population
+      const updatedClient = await Client.findById(clientId).populate(
+        "programEnrolled",
+        "name description"
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Unenrollment successful",
+        data: updatedClient,
+      });
+    } catch (transactionError) {
+      await session.abortTransaction();
+      session.endSession();
+      throw transactionError;
+    }
+  } catch (error) {
+    console.error("Unenrollment error:", error);
+    return res.status(500).json({
+      success: false,
+      message: `Server error: ${error.message}`,
+    });
+  }
+};
+
+// Delete a client by ID and also clear program enrollment field in program model
+exports.deleteClient = async (req, res) => {
+  const { id } = req.params; // Extract clientId from request parameters
+
+  try {
+    // Find the client by ID and delete it
+    const deletedClient = await Client.findByIdAndDelete(id);
+
+    if (!deletedClient) {
+      return res.status(404).json({
+        success: false,
+        message: "Client not found",
+      });
+    }
+
+    // Remove the client from all programs enrolled in it
+    await Program.updateMany(
+      { clientsEnrolled: id },
+      { $pull: { clientsEnrolled: id } }
+    );
 
     return res.status(200).json({
       success: true,
-      message: "Client enrolled in program successfully",
-      data: client,
+      message: "Client deleted successfully",
     });
   } catch (error) {
-    console.error("Error enrolling client in program:", error); // Log the error for debugging
+    console.error("Error deleting client:", error);
     return res.status(500).json({
       success: false,
       message: `Internal server error: ${error.message}`,

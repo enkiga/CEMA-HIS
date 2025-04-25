@@ -1,5 +1,6 @@
 const { programCreationSchema } = require("../middlewares/validator");
 const Program = require("../models/Program"); // Import the Program model
+const Client = require("../models/client"); // Import the Client model
 
 exports.createProgram = async (req, res) => {
   const { name, description } = req.body;
@@ -63,6 +64,40 @@ exports.getPrograms = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching programs:", error);
+    return res.status(500).json({
+      success: false,
+      message: `Internal server error: ${error.message}`,
+    });
+  }
+};
+
+// Delete a program by ID and also clear client enrollment field in client model
+exports.deleteProgram = async (req, res) => {
+  const { id } = req.params; // Extract programId from request parameters
+
+  try {
+    // Find the program by ID and delete it
+    const deletedProgram = await Program.findByIdAndDelete(id);
+
+    if (!deletedProgram) {
+      return res.status(404).json({
+        success: false,
+        message: "Program not found",
+      });
+    }
+
+    // Remove the program from all clients enrolled in it
+    await Client.updateMany(
+      { programEnrolled: id },
+      { $pull: { programEnrolled: id } }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Program deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting program:", error);
     return res.status(500).json({
       success: false,
       message: `Internal server error: ${error.message}`,

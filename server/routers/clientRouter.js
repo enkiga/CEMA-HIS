@@ -11,5 +11,11 @@ router.post("/add-client", identifier, clientController.addClient); // Route for
 router.get("/all-clients", clientController.getClients); // Route for fetching all clients
 router.get("/:id", clientController.getClientById);
 router.patch("/:id/enroll", identifier, clientController.enrollClientInProgram); // Route for enrolling a client in a program
+router.patch(
+  "/:id/unenroll",
+  identifier,
+  clientController.unenrollClientFromProgram
+); // Route for unenrolling a client from a program
+router.delete("/:id", identifier, clientController.deleteClient); // Route for deleting a client
 
 module.exports = router; // Export the router for use in other parts of the application

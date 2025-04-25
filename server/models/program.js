@@ -1,13 +1,12 @@
 // Import required modules
 const mongoose = require("mongoose");
 
-
 const programSchema = new mongoose.Schema(
   {
     creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Doctor",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
+      required: true,
     },
     name: {
       type: String,
@@ -22,13 +21,6 @@ const programSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Client",
-      },
-    ],
-
-    doctorsEnrolled: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Doctor",
       },
     ],
   },
