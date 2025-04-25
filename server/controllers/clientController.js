@@ -50,3 +50,24 @@ exports.addClient = async (req, res) => {
     });
   }
 };
+
+exports.getClients = async (req, res) => {
+  try {
+    // Fetch all clients from the database
+    const clients = await Client.find()
+      .populate("creator", "name email") // Populate the creator field with name and email
+      .populate("programEnrolled", "name description"); // Populate the programsEnrolled field with name and description
+
+    return res.status(200).json({
+      success: true,
+      message: "Clients fetched successfully",
+      data: clients,
+    });
+  } catch (error) {
+    console.error("Error fetching clients:", error); // Log the error for debugging
+    return res.status(500).json({
+      success: false,
+      message: `Internal server error: ${error.message}`,
+    });
+  }
+};
