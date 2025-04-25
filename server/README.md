@@ -70,6 +70,11 @@ The server is the backend component of the Health Information System. It provide
    TOKEN_SECRET=<your_secret_key>
    ```
 
+   - Replace `<your_mongodb_connection_string>` with your MongoDB connection string.
+   - Replace `<your_secret_key>` with a secret key for JWT signing. e.g., `mysecretkey`.
+   - Ensure that the MongoDB server is running.
+   - Ensure that the server has the necessary permissions to access the database.
+
 4. **Start the Server**:
 
    ```bash
@@ -80,6 +85,8 @@ The server is the backend component of the Health Information System. It provide
 
    - The server will run on `http://localhost:8000 (or the port specified in PORT_URL).`
    - Use tools like Postman or cURL to interact with the API.
+   - For API routes with authentication, include the JWT token in the headers as `Authorization: Bearer <token>` and `client: not-browser`, when using Postman.
+   - For routes that require an ID, replace `:id` in the URL with the actual ID.
 
 ### Middleware
 
@@ -124,4 +131,4 @@ The server is the backend component of the Health Information System. It provide
 
 ### License
 
-This project is licensed under the ISC License. ```
+This project is licensed under the ISC License.
