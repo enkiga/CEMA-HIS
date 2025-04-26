@@ -50,7 +50,7 @@ const RegistrationForm = ({ className, ...props }: Props) => {
           <div className="relative hidden bg-muted md:block md:col-span-1 ml-5 rounded-sm">
             <div className="absolute inset-0 bg-gradient-to-b from-muted to-transparent z-10 rounded-t-sm" />
             <img
-              src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1652787544912-137c7f92f99b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale rounded-sm"
             />

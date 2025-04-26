@@ -1,14 +1,20 @@
-import SideBar from "@/components/SideBar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSideBar from "@/components/AppSideBar";
+import {
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
 const PagesLayout = () => {
   return (
     <SidebarProvider>
-      <SideBar />
+      <AppSideBar />
       <main>
         <SidebarTrigger />
-        <Outlet />
+        <SidebarInset>
+          <Outlet />
+        </SidebarInset>
       </main>
     </SidebarProvider>
   );
