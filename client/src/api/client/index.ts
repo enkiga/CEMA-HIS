@@ -1,5 +1,6 @@
 import medium from "../medium";
 
+// Getting all clients
 export const getAllClients = async () => {
   try {
     const response = await medium.get("/client/all-clients");
@@ -10,6 +11,7 @@ export const getAllClients = async () => {
   }
 };
 
+// Getting Client by ID
 export const getClientById = async (id: string) => {
   try {
     const response = await medium.get(`/client/${id}`);
@@ -20,6 +22,7 @@ export const getClientById = async (id: string) => {
   }
 };
 
+// Creating a new client
 export const createClient = async (clientData: any) => {
   try {
     const response = await medium.post("/client/add-client", clientData);
@@ -30,6 +33,7 @@ export const createClient = async (clientData: any) => {
   }
 };
 
+// Deleting a client
 export const deleteClient = async (id: string) => {
   try {
     const response = await medium.delete(`/client/${id}`);
@@ -40,6 +44,7 @@ export const deleteClient = async (id: string) => {
   }
 };
 
+// Enrolling a client in a project
 export const enrollClientInProject = async (
   clientId: string,
   projectId: string

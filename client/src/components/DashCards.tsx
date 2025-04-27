@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 type Props = {};
 
 const DashCards = ({}: Props) => {
+  // State to hold the metrics data
+  // Initialize the metrics state with default values
   const [metrics, setMetrics] = useState({
     clients: 0,
     projects: 0,
@@ -24,17 +26,22 @@ const DashCards = ({}: Props) => {
     doctorTrend: 0,
   });
 
+  // Effect to fetch data when the component mounts
   useEffect(() => {
+    // Function to calculate the trend percentage
     const calculateTrend = (current: number, previous: number) => {
       if (previous === 0) return current > 0 ? 100 : 0;
       return ((current - previous) / previous) * 100;
     };
 
+    // Function to get monthly counts of items based on their creation date
     const getMonthlyCounts = (data: any[]) => {
       const now = new Date();
       const currentMonth = now.getMonth();
       const currentYear = now.getFullYear();
 
+      // Calculate the previous month and year
+      // Create a new date object and set the month to the previous month
       const previousMonthDate = new Date(now);
       previousMonthDate.setMonth(now.getMonth() - 1);
       const previousMonth = previousMonthDate.getMonth();
@@ -56,6 +63,8 @@ const DashCards = ({}: Props) => {
       };
     };
 
+    // Function to fetch data from the API
+    // Using Promise.all to fetch data concurrently
     const fetchData = async () => {
       try {
         const [clientsRes, projectsRes, doctorsRes] = await Promise.all([
@@ -89,6 +98,7 @@ const DashCards = ({}: Props) => {
           enrollments.previous
         );
 
+        // Set the metrics state with the fetched data
         setMetrics({
           clients: clientsRes.data.length,
           projects: projectsRes.data.length,
@@ -107,6 +117,8 @@ const DashCards = ({}: Props) => {
     fetchData();
   }, []);
 
+  // Function to format the trend value as a percentage string
+  // Adding a "+" sign for positive values and formatting to one decimal place
   const formatTrend = (value: number) =>
     `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 

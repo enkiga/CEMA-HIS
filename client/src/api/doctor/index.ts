@@ -1,5 +1,6 @@
 import medium from "../medium";
 
+// Signing up a new doctor
 export const signup = async (data: any) => {
   // trycatch block to handle errors
   try {
@@ -11,6 +12,7 @@ export const signup = async (data: any) => {
   }
 };
 
+// Signing in an existing doctor
 export const signin = async (data: any) => {
   // trycatch block to handle errors
   try {
@@ -22,6 +24,7 @@ export const signin = async (data: any) => {
   }
 };
 
+// Signing out the current doctor
 export const signout = async () => {
   // trycatch block to handle errors
   try {
@@ -33,6 +36,7 @@ export const signout = async () => {
   }
 };
 
+// Getting the current doctor's data
 export const getDoctor = async () => {
     // trycatch block to handle errors
     try {

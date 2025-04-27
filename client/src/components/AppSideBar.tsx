@@ -45,8 +45,12 @@ const AppSideBar = () => {
     }
   };
 
+  // Function to get initials from the user's name
   const getInitials = (name?: string) => {
+    // Fallback to "US" if name is not provided
     if (!name) return "US";
+    // Split the name by spaces and take the first letter of each part, then join them and convert to uppercase
+    // Limit to 2 characters
     return name
       .split(" ")
       .map((part) => part[0])
@@ -55,6 +59,8 @@ const AppSideBar = () => {
       .toUpperCase();
   };
 
+  // Check if user is not available
+  // If user is not available, return an empty sidebar
   if (loading || !user) {
     return <div className="w-[--sidebar-width] bg-background border-r" />;
   }

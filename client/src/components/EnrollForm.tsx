@@ -49,7 +49,7 @@ const EnrollForm = ({ onProjectEnrolled, clientId }: EnrollFormProps) => {
     try {
       const response = await project.getAllProjects();
       setProjectData(response.data || []);
-      console.log("Project data:", response.data);
+      // console.log("Project data:", response.data);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
@@ -59,7 +59,7 @@ const EnrollForm = ({ onProjectEnrolled, clientId }: EnrollFormProps) => {
     fetchProjects();
   }, []);
 
-  console.log("Project data:", projectData);
+  // console.log("Project data:", projectData);
 
   // Define our enroll form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -78,7 +78,7 @@ const EnrollForm = ({ onProjectEnrolled, clientId }: EnrollFormProps) => {
         clientId,
         data.projectId
       );
-      console.log("Client enrolled successfully:", response.data);
+      // console.log("Client enrolled successfully:", response.data);
       // Optionally, you can reset the form or close the dialog here
       form.reset();
       setIsOpen(false); // Close the dialog

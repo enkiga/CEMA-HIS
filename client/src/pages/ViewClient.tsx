@@ -19,11 +19,12 @@ const ViewClient = () => {
     }
   };
 
+  // Fetch client data when the component mounts or when clientId changes
   useEffect(() => {
     fetchClient();
   }, [clientId]);
 
-  console.log("clientData", clientData);
+  // console.log("clientData", clientData);
   return (
     <section className="@container/main flex flex-1 flex-col gap-2">
       <div className="flex flex-col gap-2 rounded-md border bg-white p-4 shadow-md dark:bg-slate-800 mt-3">
@@ -66,6 +67,7 @@ const ViewClient = () => {
       <div className="flex flex-col gap-2 rounded-md border bg-white p-4 shadow-md dark:bg-slate-800">
         <div className="flex flex-row items-center justify-between">
           <h1 className="text-lg font-semibold">Client Enrolled Projects</h1>
+          {/* Enrol to Project */}
           <EnrollForm
             clientId={clientData?._id}
             onProjectEnrolled={fetchClient}

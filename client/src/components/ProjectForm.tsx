@@ -48,7 +48,7 @@ const ProjectForm = ({ onProjectAdded }: { onProjectAdded?: () => void }) => {
     try {
       const response = await project.createProject(data);
 
-      console.log("Project created successfully:", response.data);
+      // console.log("Project created successfully:", response.data);
       // Optionally, you can reset the form or close the dialog here
       form.reset();
       setIsOpen(false); // Close the dialog

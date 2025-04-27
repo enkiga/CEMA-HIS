@@ -18,6 +18,8 @@ export type Client = {
   updatedAt: string;
 };
 
+// Define the columns for the client table
+// Each column is defined with an accessor key, header, and cell renderer
 export const clientColumns: ColumnDef<Client>[] = [
   {
     accessorKey: "name",
@@ -84,8 +86,10 @@ export const clientColumns: ColumnDef<Client>[] = [
   {
     accessorKey: "action",
     header: "Action",
+    // Setting up the action column to be a dropdown menu with view and delete options
     cell: ({ row, table }) => {
       const meta = table.options.meta as {
+        // Define the meta object to include the onClientClick and onClientDelete functions
         onClientClick?: (clientId: string) => void;
         onClientDelete?: (clientId: string) => Promise<void>;
       };

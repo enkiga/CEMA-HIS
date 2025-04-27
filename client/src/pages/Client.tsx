@@ -8,13 +8,12 @@ import { clientColumns } from "@/components/ClientColums";
 type Props = {};
 
 const Client = ({}: Props) => {
-  // Fetch clients from the API
   const [clientsData, setClientsData] = useState<any>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  // handle loading state
   const navigate = useNavigate();
 
+  // Fetch clients data from the API
   async function fetchClients() {
     setIsLoading(true);
     try {
@@ -27,6 +26,7 @@ const Client = ({}: Props) => {
     }
   }
 
+  // Fetch clients data when the component mounts or when refreshTrigger changes
   useEffect(() => {
     fetchClients();
   }, [refreshTrigger]);
@@ -80,6 +80,10 @@ const Client = ({}: Props) => {
           </div>
         )}
       </div>
+      {/* Outlet for nested routes */}
+      {/* This is where the nested routes will be rendered */}
+      {/* For example, this could be a client details page or edit page */}
+      {/* <Outlet /> */}
       <Outlet />
     </section>
   );

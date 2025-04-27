@@ -27,6 +27,7 @@ interface ClientDataTableProps<TData, TValue> {
   onClientDelete?: (clientId: string) => Promise<void>;
 }
 
+// Rendering the data table for clients using TanStack Table
 export function ClientDataTable<TData, TValue>({
   columns,
   data,

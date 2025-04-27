@@ -50,7 +50,7 @@ const ClientForm = ({ onClientAdded }: { onClientAdded?: () => void }) => {
     try {
       const response = await client.createClient(data);
 
-      console.log("Client created successfully:", response.data);
+      // console.log("Client created successfully:", response.data);
       // Optionally, you can reset the form or close the dialog here
       form.reset();
       setIsOpen(false); // Close the dialog

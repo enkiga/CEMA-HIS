@@ -28,11 +28,12 @@ const Projects = () => {
     }
   };
 
+  // Fetch projects data when the component mounts or when refreshTrigger changes
   useEffect(() => {
     fetchProjects();
   }, [refreshTrigger]);
 
-  console.log("Project data:", projectData);
+  // console.log("Project data:", projectData);
 
   return (
     <section className="@container/main flex flex-1 flex-col gap-2">

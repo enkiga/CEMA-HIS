@@ -1,5 +1,6 @@
 import medium from "../medium";
 
+// gett all projects
 export const getAllProjects = async () => {
   try {
     const response = await medium.get("/program/all-programs");
@@ -10,6 +11,7 @@ export const getAllProjects = async () => {
   }
 };
 
+// Creating a new project
 export const createProject = async (projectData: any) => {
   try {
     const response = await medium.post("/program/create-program", projectData);
@@ -20,6 +22,7 @@ export const createProject = async (projectData: any) => {
   }
 };
 
+// Deleting a project
 export const deleteProject = async (id: string) => {
   try {
     const response = await medium.delete(`/program/${id}`);

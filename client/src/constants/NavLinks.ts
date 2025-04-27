@@ -1,5 +1,6 @@
 import { FilesIcon, HomeIcon, Users2Icon } from "lucide-react";
 
+// Define the structure of the navigation link
 const NavLinkList = [
   {
     title: "Dashboard",

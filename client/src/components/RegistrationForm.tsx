@@ -48,7 +48,7 @@ const RegistrationForm = ({ className, ...props }: Props) => {
 
   //   Defining our submit function
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted", data);
+    // console.log("Form submitted", data);
     // Registration server logic
     try {
       const { name, email, password } = data;
