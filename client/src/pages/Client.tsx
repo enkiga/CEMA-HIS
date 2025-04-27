@@ -1,7 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
 import ClientForm from "@/components/ClientForm";
 import { client } from "@/api";
 import { useEffect, useState } from "react";

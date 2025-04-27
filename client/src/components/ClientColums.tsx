@@ -107,7 +107,7 @@ export const clientColumns: ColumnDef<Client>[] = [
               className="cursor-pointer text-red-500"
               onClick={() => meta.onClientDelete?.(row.original._id)}
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="mr-2 h-4 w-4 text-red-500" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

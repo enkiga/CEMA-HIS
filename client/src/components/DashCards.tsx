@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { client, project, doctor } from "@/api";
 import {
   Card,
   CardDescription,
@@ -11,90 +13,235 @@ import { Badge } from "@/components/ui/badge";
 type Props = {};
 
 const DashCards = ({}: Props) => {
+  const [metrics, setMetrics] = useState({
+    clients: 0,
+    projects: 0,
+    enrollments: 0,
+    doctors: 0,
+    clientTrend: 0,
+    projectTrend: 0,
+    enrollmentTrend: 0,
+    doctorTrend: 0,
+  });
+
+  useEffect(() => {
+    const calculateTrend = (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return ((current - previous) / previous) * 100;
+    };
+
+    const getMonthlyCounts = (data: any[]) => {
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      const previousMonthDate = new Date(now);
+      previousMonthDate.setMonth(now.getMonth() - 1);
+      const previousMonth = previousMonthDate.getMonth();
+      const previousYear = previousMonthDate.getFullYear();
+
+      return {
+        current: data.filter((item: { createdAt: string }) => {
+          const d = new Date(item.createdAt);
+          return (
+            d.getMonth() === currentMonth && d.getFullYear() === currentYear
+          );
+        }).length,
+        previous: data.filter((item: { createdAt: string }) => {
+          const d = new Date(item.createdAt);
+          return (
+            d.getMonth() === previousMonth && d.getFullYear() === previousYear
+          );
+        }).length,
+      };
+    };
+
+    const fetchData = async () => {
+      try {
+        const [clientsRes, projectsRes, doctorsRes] = await Promise.all([
+          client.getAllClients(),
+          project.getAllProjects(),
+          doctor.getAllDoctors(),
+        ]);
+
+        // Client metrics
+        const clients = getMonthlyCounts(clientsRes.data);
+        const clientTrend = calculateTrend(clients.current, clients.previous);
+
+        // Project metrics
+        const projects = getMonthlyCounts(projectsRes.data);
+        const projectTrend = calculateTrend(
+          projects.current,
+          projects.previous
+        );
+
+        // Doctor metrics
+        const doctors = getMonthlyCounts(doctorsRes.data);
+        const doctorTrend = calculateTrend(doctors.current, doctors.previous);
+
+        // Enrollment metrics
+        const allEnrollments = clientsRes.data.flatMap(
+          (c: { programEnrolled: any[] }) => c.programEnrolled
+        );
+        const enrollments = getMonthlyCounts(allEnrollments);
+        const enrollmentTrend = calculateTrend(
+          enrollments.current,
+          enrollments.previous
+        );
+
+        setMetrics({
+          clients: clientsRes.data.length,
+          projects: projectsRes.data.length,
+          enrollments: allEnrollments.length,
+          doctors: doctorsRes.data.length,
+          clientTrend,
+          projectTrend,
+          enrollmentTrend,
+          doctorTrend,
+        });
+      } catch (error) {
+        console.error("Error fetching metrics:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const formatTrend = (value: number) =>
+    `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+
   return (
     <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+      {/* Clients Card */}
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>Total Clients</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            $1,250.00
+            {metrics.clients}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
+              {metrics.clientTrend > 0 ? (
+                <TrendingUpIcon className="size-3" />
+              ) : (
+                <TrendingDownIcon className="size-3" />
+              )}
+              {formatTrend(metrics.clientTrend)}
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <TrendingUpIcon className="size-4" />
+            {metrics.clientTrend > 0 ? "Growing" : "Declining"} this month
+            {metrics.clientTrend > 0 ? (
+              <TrendingUpIcon className="size-4" />
+            ) : (
+              <TrendingDownIcon className="size-4" />
+            )}
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Client acquisition performance
           </div>
         </CardFooter>
       </Card>
+
+      {/* Projects Card */}
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Active Projects</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            1,234
+            {metrics.projects}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingDownIcon className="size-3" />
-              -20%
+              {metrics.projectTrend > 0 ? (
+                <TrendingUpIcon className="size-3" />
+              ) : (
+                <TrendingDownIcon className="size-3" />
+              )}
+              {formatTrend(metrics.projectTrend)}
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <TrendingDownIcon className="size-4" />
+            {metrics.projectTrend > 0 ? "More" : "Fewer"} projects
+            {metrics.projectTrend > 0 ? (
+              <TrendingUpIcon className="size-4" />
+            ) : (
+              <TrendingDownIcon className="size-4" />
+            )}
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Current active initiatives
           </div>
         </CardFooter>
       </Card>
+
+      {/* Enrollments Card */}
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Program Enrollments</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            45,678
+            {metrics.enrollments}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
+              {metrics.enrollmentTrend > 0 ? (
+                <TrendingUpIcon className="size-3" />
+              ) : (
+                <TrendingDownIcon className="size-3" />
+              )}
+              {formatTrend(metrics.enrollmentTrend)}
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <TrendingUpIcon className="size-4" />
+            {metrics.enrollmentTrend > 0 ? "Increasing" : "Decreasing"}{" "}
+            engagement
+            {metrics.enrollmentTrend > 0 ? (
+              <TrendingUpIcon className="size-4" />
+            ) : (
+              <TrendingDownIcon className="size-4" />
+            )}
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">
+            Total program participations
+          </div>
         </CardFooter>
       </Card>
+
+      {/* Doctors Card */}
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Medical Team</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            4.5%
+            {metrics.doctors}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +4.5%
+              {metrics.doctorTrend > 0 ? (
+                <TrendingUpIcon className="size-3" />
+              ) : (
+                <TrendingDownIcon className="size-3" />
+              )}
+              {formatTrend(metrics.doctorTrend)}
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance <TrendingUpIcon className="size-4" />
+            Team {metrics.doctorTrend > 0 ? "growth" : "reduction"}
+            {metrics.doctorTrend > 0 ? (
+              <TrendingUpIcon className="size-4" />
+            ) : (
+              <TrendingDownIcon className="size-4" />
+            )}
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-muted-foreground">
+            Qualified medical professionals
+          </div>
         </CardFooter>
       </Card>
     </div>

@@ -43,3 +43,15 @@ export const getDoctor = async () => {
         throw error; // Rethrow the error to be handled by the calling function
     }
 }
+
+// get all doctors
+export const getAllDoctors = async () => {
+    // trycatch block to handle errors
+    try {
+        const response = await medium.get("/auth/doctors");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching all doctors data:", error);
+        throw error; // Rethrow the error to be handled by the calling function
+    }
+}

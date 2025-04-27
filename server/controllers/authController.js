@@ -153,9 +153,7 @@ exports.signout = async (req, res) => {
 exports.getDoctor = async (req, res) => {
   try {
     // Doctor is already set in the request by the identifier middleware
-    const doctor = await Doctor.findById(req.user.doctorId).select(
-      "-password"
-    ); // Exclude the password field from the response
+    const doctor = await Doctor.findById(req.user.doctorId).select("-password"); // Exclude the password field from the response
 
     // Check if doctor exists
     if (!doctor) {
@@ -176,6 +174,35 @@ exports.getDoctor = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching doctor information:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// get all doctors function to retrieve all doctors information
+exports.getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find().select("-password"); // Exclude the password field from the response
+
+    // Check if doctors exist
+    if (!doctors || doctors.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No doctors found",
+      });
+    }
+
+    // Send the doctor information in the response
+    res.status(200).json({
+      success: true,
+      message: "Doctors retrieved successfully",
+      data: doctors.map((doctor) => ({
+        id: doctor._id,
+        name: doctor.name,
+        email: doctor.email, // Do not send the password in the response
+      })),
+    });
+  } catch (error) {
+    console.error("Error fetching all doctors information:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
