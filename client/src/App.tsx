@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Client from "./pages/Client";
 import Projects from "./pages/Projects";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   // Define route principles
@@ -39,6 +40,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <Toaster />
     </>
   );
 }
