@@ -104,4 +104,4 @@ This project is a basic health information system developed as part of a Softwar
 
 6. Apllication Snippet:
 
-![Snippet](//CEMA%20HIS%20snippet.gif)
+![Snippet](/snippet.gif)
