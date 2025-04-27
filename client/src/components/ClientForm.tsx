@@ -21,8 +21,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusIcon } from "lucide-react";
+import { client } from "@/api";
+import { useState } from "react";
 
-type Props = {};
 
 // Define our client form schema using Zod
 const formSchema = z.object({
@@ -30,7 +31,9 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
-const ClientForm = ({}: Props) => {
+const ClientForm = ({ onClientAdded }: { onClientAdded?: () => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   // Define our client form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,12 +45,23 @@ const ClientForm = ({}: Props) => {
 
   // Defining our submit function
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted", data);
-    // Here you would typically send the data to your server
+    // console.log("Form submitted", data);
+    // Add client to the database logic
+    try {
+      const response = await client.createClient(data);
+
+      console.log("Client created successfully:", response.data);
+      // Optionally, you can reset the form or close the dialog here
+      form.reset();
+      setIsOpen(false); // Close the dialog
+      onClientAdded?.(); // Trigger table refresh
+    } catch (error) {
+      console.error("Error creating client:", error);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2 w-full md:w-auto">
           <PlusIcon /> <span>Add New Client</span>

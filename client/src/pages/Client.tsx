@@ -26,19 +26,20 @@ type Props = {};
 const Client = ({}: Props) => {
   // Fetch clients from the API
   const [clientsData, setClientsData] = useState<any>();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const fetchClients = async () => {
+    try {
+      const response = await client.getAllClients();
+      setClientsData(response.data || []);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await client.getAllClients();
-        setClientsData(response.data || []);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-      }
-    };
-
     fetchClients();
-  }, []);
+  }, [refreshTrigger]);
 
   return (
     <section className="@container/main flex flex-1 flex-col gap-2">
@@ -56,7 +57,9 @@ const Client = ({}: Props) => {
             </Button>
           </div>
 
-          <ClientForm />
+          <ClientForm
+            onClientAdded={() => setRefreshTrigger((prev) => prev + 1)}
+          />
         </div>
         {/* Table for clients */}
         <Table className="w-full flex-1">
