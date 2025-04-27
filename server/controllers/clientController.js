@@ -330,3 +330,32 @@ exports.deleteClient = async (req, res) => {
     });
   }
 };
+
+// Search functionality for clients by name or email
+exports.searchClients = async (req, res) => {
+  const { query } = req.query; // Get the search query from request parameters
+
+  try {
+    // Search for clients by name or email
+    const clients = await Client.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } }, // Case-insensitive search for name
+        { email: { $regex: query, $options: "i" } }, // Case-insensitive search for email
+      ],
+    })
+      .populate("creator", "name email") // Populate the creator field with name and email
+      .populate("programEnrolled", "name description"); // Populate the programEnrolled field with name and description
+
+    return res.status(200).json({
+      success: true,
+      message: "Clients fetched successfully",
+      data: clients,
+    });
+  } catch (error) {
+    console.error("Error searching clients:", error); // Log the error for debugging
+    return res.status(500).json({
+      success: false,
+      message: `Internal server error: ${error.message}`,
+    });
+  }
+};

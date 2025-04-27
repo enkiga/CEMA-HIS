@@ -1,4 +1,5 @@
 import { client } from "@/api";
+import EnrollForm from "@/components/EnrollForm";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -41,7 +42,10 @@ const ViewClient = () => {
         </div>
       </div>
       <div className="flex flex-col gap-2 rounded-md border bg-white p-4 shadow-md dark:bg-slate-800">
-        <h1 className="text-lg font-semibold">Client Projects</h1>
+        <div className="flex flex-row items-center justify-between">
+          <h1 className="text-lg font-semibold">Client Projects</h1>
+          <EnrollForm clientId={clientData?._id} onProjectEnrolled={fetchClient} />
+        </div>
         {clientData?.programEnrolled?.length === 0 ? (
           <div className="flex flex-col gap-2">
             <p className="text-sm font-semibold">No Projects Enrolled</p>
