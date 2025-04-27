@@ -56,11 +56,12 @@ exports.getPrograms = async (req, res) => {
     // Populate the creator field with doctor details also for the clientsEnrolled and doctorsEnrolled fields
     const programs = await Program.find()
       .populate("creator", "name email") // Populate the creator field with name and email
-      .populate("clientsEnrolled", "name email") // Populate the clientsEnrolled field with name and email
-      .populate("doctorsEnrolled", "name email"); // Populate the doctorsEnrolled field with name and email
+      .populate("clientsEnrolled", "name email");
+
     return res.status(200).json({
       success: true,
-      programs,
+      message: "Programs fetched successfully",
+      data: programs,
     });
   } catch (error) {
     console.error("Error fetching programs:", error);

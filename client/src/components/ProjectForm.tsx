@@ -21,8 +21,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusIcon } from "lucide-react";
-
-type Props = {};
+import { project } from "@/api";
+import { useState } from "react";
 
 // Define our project form schema using Zod
 const formSchema = z.object({
@@ -30,7 +30,8 @@ const formSchema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
-const ProjectForm = ({}: Props) => {
+const ProjectForm = ({ onProjectAdded }: { onProjectAdded?: () => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
   // Define our project form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,12 +43,23 @@ const ProjectForm = ({}: Props) => {
 
   // Defining our submit function
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted", data);
-    // Here you would typically send the data to your server
+    // console.log("Form submitted", data);
+    // Add project to the database logic
+    try {
+      const response = await project.createProject(data);
+
+      console.log("Project created successfully:", response.data);
+      // Optionally, you can reset the form or close the dialog here
+      form.reset();
+      setIsOpen(false); // Close the dialog
+      onProjectAdded?.(); // Trigger table refresh
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2 w-full md:w-auto">
           <PlusIcon /> <span>Add New Project</span>
