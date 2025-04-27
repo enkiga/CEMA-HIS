@@ -19,6 +19,8 @@ The server is the backend component of the Health Information System. It provide
 - **POST /signup**: Register a new doctor.
 - **POST /signin**: Log in an existing doctor.
 - **POST /signout**: Log out the authenticated doctor.
+- **GET /doctor**: Retrieve the authenticated doctor's information.
+- **GET /all-doctors**: Retrieve all doctors
 
 ### Client Management (`/api/v1/client`)
 
@@ -44,7 +46,7 @@ The server is the backend component of the Health Information System. It provide
 - Node.js (v16 or higher)
 - MongoDB (running locally or accessible via a connection string)
 - Postman or cURL for API testing
-  
+
 1. **Testing the API's**:
 
    - Use tools like Postman or cURL to interact with the API.
