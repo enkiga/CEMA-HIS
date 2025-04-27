@@ -1,7 +1,5 @@
 import medium from "../medium";
 
-
-
 export const getAllClients = async () => {
     try {
         const response = await medium.get("/client/all-clients");
@@ -28,6 +26,16 @@ export const createClient = async (clientData: any) => {
         return response.data;
     } catch (error) {
         console.error("Error creating client:", error);
+        throw error;
+    }
+}
+
+export const deleteClient = async (id: string) => {
+    try {
+        const response = await medium.delete(`/client/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting client:", error);
         throw error;
     }
 }

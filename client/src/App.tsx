@@ -39,8 +39,9 @@ function App() {
           {/* Public Routes */}
           <Route element={<PagesLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="clients" element={<Client />}>
-              <Route path=":clientId" element={<ViewClient />} />
+            <Route path="clients" >
+              <Route index element={<Client />} />
+              <Route path=":id" element={<ViewClient />} />
             </Route>
             <Route path="projects" element={<Projects />} />
           </Route>
