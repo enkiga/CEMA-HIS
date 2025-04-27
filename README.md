@@ -17,7 +17,7 @@ This project is a basic health information system developed as part of a Softwar
 
 ## Technologies Used
 
-- **Frontend:**:
+- **Frontend:**
 
   - React.js
   - Complemenrtary Libraries:
@@ -28,7 +28,7 @@ This project is a basic health information system developed as part of a Softwar
     - React Hook Form
     - Zod
   
-- **Backend:**:
+- **Backend:**
 
   - Node.js
   - Express.js
@@ -41,7 +41,7 @@ This project is a basic health information system developed as part of a Softwar
     - dotenv for environment variables
     - cors for Cross-Origin Resource Sharing
 
-- **Development Tools:**:
+- **Development Tools:**
   - Postman for API testing
   - Git for version control
   - Visual Studio Code as the IDE.
@@ -51,8 +51,8 @@ This project is a basic health information system developed as part of a Softwar
 
 **For more information on either the frontend or backend, please refer to the respective directories in the project**:
 
-- Client: `https://github.com/enkiga/CEMA-HIS/tree/main/client`
-- Server: `https://github.com/enkiga/CEMA-HIS/tree/main/server`
+- Client: [README](https://github.com/enkiga/CEMA-HIS/tree/main/client)
+- Server: [README](https://github.com/enkiga/CEMA-HIS/tree/main/server)
 
 ## Installation
 
