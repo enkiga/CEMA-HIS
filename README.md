@@ -101,3 +101,7 @@ This project is a basic health information system developed as part of a Softwar
 
    - The server will run on `http://localhost:3000` or `http://localhost:8000` and the client will run on `http://localhost:5173`.
    - If your server runs on port 8000, you have to change the port in the client `.env` file. Given port 8000 is the fallback port for the server.
+
+6. Apllication Snippet:
+
+![Snippet](/Snippet.mp4)
