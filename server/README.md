@@ -43,49 +43,14 @@ The server is the backend component of the Health Information System. It provide
 
 - Node.js (v16 or higher)
 - MongoDB (running locally or accessible via a connection string)
+- Postman or cURL for API testing
+  
+1. **Testing the API's**:
 
-### Steps to Set Up the Server
-
-1. **Clone the Repository**:
-
-   ```bash
-   git clone https://github.com/enkiga/CEMA-HIS.git
-   cd CEMA-HIS/server
-   ```
-
-2. **Install Dependencies:**:
-
-   ```bash
-   npm install
-   ```
-
-3. **Set Up Environment Variables:**:
-
-   - Create a .env file in the server directory.
-   - Use the .env_example file as a reference:
-
-   ```env
-   PORT_URL=8000
-   MONGODB_URL=<your_mongodb_connection_string>
-   TOKEN_SECRET=<your_secret_key>
-   ```
-
-   - Replace `<your_mongodb_connection_string>` with your MongoDB connection string.
-   - Replace `<your_secret_key>` with a secret key for JWT signing. e.g., `mysecretkey`.
-   - Ensure that the MongoDB server is running.
-   - Ensure that the server has the necessary permissions to access the database.
-
-4. **Start the Server**:
-
-   ```bash
-   npm run dev
-   ```
-
-5. **Access the API**:
-
-   - The server will run on `http://localhost:8000 (or the port specified in PORT_URL).`
    - Use tools like Postman or cURL to interact with the API.
    - For API routes with authentication, include the JWT token in the headers as `Authorization: Bearer <token>` and `client: not-browser`, when using Postman.
+   - To get the token, first sign up a doctor and then sign in to get the token.
+   - Use the token for all routes that require authentication.
    - For routes that require an ID, replace `:id` in the URL with the actual ID.
 
 ### Middleware
@@ -112,23 +77,3 @@ The server is the backend component of the Health Information System. It provide
 
 3. **Program**
    Represents a health program with fields for name, description, and clientsEnrolled.
-
-### Dependencies
-
-- bcryptjs: For password hashing.
-- cookie-parser: For parsing cookies.
-- cors: For handling cross-origin requests.
-- dotenv: For environment variable management.
-- express: For building the RESTful API.
-- joi: For request validation.
-- jsonwebtoken: For authentication using JWT.
-- mongoose: For MongoDB object modeling.
-
-### Development Tools
-
-- nodemon: For automatic server restarts during development.
-- eslint and prettier: For code linting and formatting.
-
-### License
-
-This project is licensed under the ISC License.
