@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { doctor } from "@/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   className?: string;
@@ -50,7 +51,7 @@ const LoginForm = ({ className, ...props }: Props) => {
     try {
       const { email, password } = data;
       setIsLoading(true);
-      const response = await doctor.signin({ email, password });
+      await doctor.signin({ email, password });
 
       toast("Login successful", {
         description: "Will be redirected to dashboard",
@@ -120,15 +121,25 @@ const LoginForm = ({ className, ...props }: Props) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full md:w-fit">
-                Login
-              </Button>
+              {!isLoading ? (
+                <Button type="submit" className="w-full md:w-fit">
+                  Submit
+                </Button>
+              ) : (
+                <Button disabled>
+                  <Loader2 className="animate-spin" />
+                  Please wait
+                </Button>
+              )}
 
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <Link
+                  to="/register"
+                  className="text-primary underline underline-offset-4"
+                >
                   Sign up
-                </a>
+                </Link>
               </div>
             </form>
           </Form>

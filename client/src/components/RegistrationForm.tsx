@@ -13,6 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { doctor } from "@/api";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   className?: string;
@@ -27,6 +32,10 @@ const formSchema = z.object({
 });
 
 const RegistrationForm = ({ className, ...props }: Props) => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   // Define our login form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,7 +49,27 @@ const RegistrationForm = ({ className, ...props }: Props) => {
   //   Defining our submit function
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Form submitted", data);
-    // Here you would typically send the data to your server
+    // Registration server logic
+    try {
+      const { name, email, password } = data;
+      setIsLoading(true);
+      await doctor.signup({ name, email, password });
+
+      toast("Registration successful", {
+        description: "Will be redirected to login",
+      });
+
+      // Redirect to login after successful registration
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+      setErrorMessage("Registration failed. Please try again.");
+      toast("Registration failed", {
+        description: `${errorMessage} || "Registration failed"`,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -113,9 +142,16 @@ const RegistrationForm = ({ className, ...props }: Props) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full md:w-fit">
-                Register
-              </Button>
+              {!isLoading ? (
+                <Button type="submit" className="w-full md:w-fit">
+                  Submit
+                </Button>
+              ) : (
+                <Button disabled>
+                  <Loader2 className="animate-spin" />
+                  Please wait
+                </Button>
+              )}
               <div className="text-center text-sm">
                 Already have an account?{" "}
                 <a href="#" className="underline underline-offset-4">
