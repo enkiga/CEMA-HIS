@@ -1,9 +1,9 @@
-import client from "../client";
+import medium from "../medium";
 
 export const signup = async (data: any) => {
   // trycatch block to handle errors
   try {
-    const response = await client.post("/auth/signup", data);
+    const response = await medium.post("/auth/signup", data);
     return response.data;
   } catch (error) {
     console.error("Error during signup:", error);
@@ -14,7 +14,7 @@ export const signup = async (data: any) => {
 export const signin = async (data: any) => {
   // trycatch block to handle errors
   try {
-    const response = await client.post("/auth/signin", data);
+    const response = await medium.post("/auth/signin", data);
     return response.data;
   } catch (error) {
     console.error("Error during signin:", error);
@@ -25,7 +25,7 @@ export const signin = async (data: any) => {
 export const signout = async () => {
   // trycatch block to handle errors
   try {
-    const response = await client.post("/auth/signout");
+    const response = await medium.post("/auth/signout");
     return response.data;
   } catch (error) {
     console.error("Error during signout:", error);
@@ -36,7 +36,7 @@ export const signout = async () => {
 export const getDoctor = async () => {
     // trycatch block to handle errors
     try {
-        const response = await client.get("/auth/doctor");
+        const response = await medium.get("/auth/doctor");
         return response.data;
     } catch (error) {
         console.error("Error fetching doctor data:", error);

@@ -18,15 +18,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Logo } from "@/assets";
 
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import { useUser } from "@/context/UserContext";
 import { doctor } from "@/api";
 
 const AppSideBar = () => {
-  const navigate = useNavigate();
   const { isMobile } = useSidebar();
   const { user, loading } = useUser();
 
@@ -45,6 +44,21 @@ const AppSideBar = () => {
       console.error("Error logging out:", error);
     }
   };
+
+  const getInitials = (name?: string) => {
+    if (!name) return "US";
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  };
+
+  if (loading || !user) {
+    return <div className="w-[--sidebar-width] bg-background border-r" />;
+  }
+
   return (
     <Sidebar collapsible="icon">
       {/* Sidebar Header with Logo that is collapsible to only logo */}
@@ -83,12 +97,17 @@ const AppSideBar = () => {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src="" alt="User Avatar" />
-                    <AvatarFallback className="rounded-lg">JD</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">
+                      {getInitials(user?.doctor?.name)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-semibold">
+                      {user?.doctor?.name || "Unknown User"}
+                    </span>
+                    <span className="truncate text-xs">
+                      {user?.doctor?.email || "No email provided"}
+                    </span>
                   </div>
                   <ChevronRight className="ml-auto size-4" />
                 </SidebarMenuButton>

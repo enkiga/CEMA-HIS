@@ -19,6 +19,7 @@ import Client from "./pages/Client";
 import Projects from "./pages/Projects";
 import { Toaster } from "./components/ui/sonner";
 import { UserProvider } from "./context/UserContext";
+import ViewClient from "./pages/ViewClient";
 
 function App() {
   // Define route principles
@@ -38,7 +39,9 @@ function App() {
           {/* Public Routes */}
           <Route element={<PagesLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="clients" element={<Client />} />
+            <Route path="clients" element={<Client />}>
+              <Route path=":clientId" element={<ViewClient />} />
+            </Route>
             <Route path="projects" element={<Projects />} />
           </Route>
         </Route>

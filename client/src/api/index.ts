@@ -1,3 +1,4 @@
 import * as doctor from './doctor';
+import * as client from './client';
 
-export { doctor };
+export { doctor, client };

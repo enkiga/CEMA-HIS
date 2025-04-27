@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const client = axios.create({
+const medium = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1",
   withCredentials: true,
   headers: {
@@ -10,7 +10,7 @@ const client = axios.create({
 });
 
 // Add request interceptor to include token in headers
-client.interceptors.request.use(
+medium.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -24,7 +24,7 @@ client.interceptors.request.use(
 );
 
 // Add response interceptor to handle errors globally
-client.interceptors.response.use(
+medium.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -45,4 +45,8 @@ client.interceptors.response.use(
   }
 );
 
-export default client;
+export default medium;
+export function getAllClients() {
+  throw new Error("Function not implemented.");
+}
+
