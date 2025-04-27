@@ -21,16 +21,34 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Logo } from "@/assets";
 
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { useUser } from "@/context/UserContext";
+import { doctor } from "@/api";
 
-type Props = {};
-
-const AppSideBar = ({}: Props) => {
+const AppSideBar = () => {
+  const navigate = useNavigate();
   const { isMobile } = useSidebar();
+  const { user, loading } = useUser();
+
+  // Check if user is loading
+  if (loading) {
+    return <></>;
+  }
+
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await doctor.signout();
+      // reload the page after logout
+      window.location.reload(); // Redirect to the login page after logout
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   return (
     <Sidebar collapsible="icon">
       {/* Sidebar Header with Logo that is collapsible to only logo */}
-      <SidebarHeader className="flex items-startjustify-between px-4 py-2">
+      <SidebarHeader className="flex items-start justify-between px-4 py-2">
         <img src={Logo} alt="Logo" className="h-4 w-4 " />
       </SidebarHeader>
       <SidebarContent>
@@ -38,7 +56,7 @@ const AppSideBar = ({}: Props) => {
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarMenu>
             {NavLinkList.map((link) => (
-              <SidebarMenuItem>
+              <SidebarMenuItem key={link.title}>
                 <NavLink
                   to={link.url}
                   className={({ isActive }) =>
@@ -69,8 +87,8 @@ const AppSideBar = ({}: Props) => {
                     <AvatarFallback className="rounded-lg">JD</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">John Doe</span>
-                    <span className="truncate text-xs">johndoe@gmail.com</span>
+                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate text-xs">{user.email}</span>
                   </div>
                   <ChevronRight className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -81,7 +99,10 @@ const AppSideBar = ({}: Props) => {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={handleLogout}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Logout</span>
                 </DropdownMenuItem>

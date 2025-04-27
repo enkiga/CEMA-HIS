@@ -6,6 +6,7 @@ const client = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 10000, // Set a timeout of 10 seconds
 });
 
 // Add request interceptor to include token in headers

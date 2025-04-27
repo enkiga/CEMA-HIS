@@ -1,7 +1,7 @@
 // Import required modules
 const jwt = require("jsonwebtoken"); // Import JWT for token generation
 const Doctor = require("../models/doctor"); // Import the Doctor modelconst { StatusCodes } = require("http-status-codes"); // Import status codes for HTTP responses
-const { doHash,doHashValidation } = require("../utils/hashing"); // Import hashing utility functions
+const { doHash, doHashValidation } = require("../utils/hashing"); // Import hashing utility functions
 const { registrationSchema, loginSchema } = require("../middlewares/validator"); // Import validation schema
 const doctor = require("../models/doctor");
 
@@ -147,4 +147,35 @@ exports.signout = async (req, res) => {
       success: true,
       message: "Doctor signed out successfully",
     }); // Send a success message to the client
+};
+
+// getCurrentDoctor function to retrieve doctor information
+exports.getDoctor = async (req, res) => {
+  try {
+    // Doctor is already set in the request by the identifier middleware
+    const doctor = await Doctor.findById(req.user.doctorId).select(
+      "-password"
+    ); // Exclude the password field from the response
+
+    // Check if doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor not found",
+      });
+    }
+
+    // Send the doctor information in the response
+    res.status(200).json({
+      success: true,
+      doctor: {
+        id: doctor._id,
+        name: doctor.name,
+        email: doctor.email, // Do not send the password in the response
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching doctor information:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 };

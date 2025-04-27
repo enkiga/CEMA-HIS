@@ -32,3 +32,14 @@ export const signout = async () => {
     throw error; // Rethrow the error to be handled by the calling function
   }
 };
+
+export const getDoctor = async () => {
+    // trycatch block to handle errors
+    try {
+        const response = await client.get("/auth/doctor");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching doctor data:", error);
+        throw error; // Rethrow the error to be handled by the calling function
+    }
+}

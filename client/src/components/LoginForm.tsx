@@ -18,6 +18,7 @@ import { doctor } from "@/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Loader2 } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 
 type Props = {
   className?: string;
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = ({ className, ...props }: Props) => {
+  const { refreshUser } = useUser();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,16 +53,22 @@ const LoginForm = ({ className, ...props }: Props) => {
     try {
       const { email, password } = data;
       setIsLoading(true);
-      await doctor.signin({ email, password });
+      const loginSuccess = await doctor.signin({ email, password });
 
-      toast("Login successful", {
-        description: "Will be redirected to dashboard",
-      });
-
-      // Redirect to dashboard after successful login
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      if (loginSuccess) {
+        // Refresh user data after login
+        toast("Login successful", {
+          description: "Welcome back!",
+        });
+        await refreshUser(); // Refresh user data
+        navigate("/dashboard", { replace: true }); // Redirect to dashboard after successful login
+      } else {
+        setErrorMessage("Invalid email or password");
+        toast("Login failed", {
+          description: "Invalid email or password",
+        });
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error("Login error:", error);
       setIsLoading(false);

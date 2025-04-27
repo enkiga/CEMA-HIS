@@ -5,13 +5,20 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import { AuthLayout, PagesLayout, RootLayout } from "./layout";
+import {
+  AuthLayout,
+  AuthRedirectLayout,
+  PagesLayout,
+  ProtectedLayout,
+  RootLayout,
+} from "./layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Client from "./pages/Client";
 import Projects from "./pages/Projects";
 import { Toaster } from "./components/ui/sonner";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   // Define route principles
@@ -19,17 +26,21 @@ function App() {
     createRoutesFromElements(
       // RootLayout
       <Route path="/" element={<RootLayout />}>
-        {/* Auth Layout */}
-        <Route element={<AuthLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+        <Route element={<AuthRedirectLayout />}>
+          {/* Auth Layout */}
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route>
         </Route>
 
-        {/* Public Routes */}
-        <Route element={<PagesLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="clients" element={<Client />} />
-          <Route path="projects" element={<Projects />} />
+        <Route element={<ProtectedLayout />}>
+          {/* Public Routes */}
+          <Route element={<PagesLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="clients" element={<Client />} />
+            <Route path="projects" element={<Projects />} />
+          </Route>
         </Route>
 
         {/* FallbackRoute */}
@@ -38,10 +49,10 @@ function App() {
     )
   );
   return (
-    <>
+    <UserProvider >
       <RouterProvider router={router} />
       <Toaster />
-    </>
+    </UserProvider>
   );
 }
 
