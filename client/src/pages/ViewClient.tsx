@@ -40,11 +40,36 @@ const ViewClient = () => {
           <p className="text-sm font-semibold">Client Email:</p>
           <p className="text-sm">{clientData?.email}</p>
         </div>
+
+        <div className="flex flex-row gap-2">
+          <p className="text-sm font-semibold">Client Created At:</p>
+          {/* Date format dd/mm/yy */}
+          <p className="text-sm">
+            {new Date(clientData?.createdAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            })}
+          </p>
+        </div>
+        <div className="flex flex-row gap-2">
+          <p className="text-sm font-semibold">Client Updated At:</p>
+          <p className="text-sm">
+            {new Date(clientData?.updatedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            })}
+          </p>
+        </div>
       </div>
       <div className="flex flex-col gap-2 rounded-md border bg-white p-4 shadow-md dark:bg-slate-800">
         <div className="flex flex-row items-center justify-between">
-          <h1 className="text-lg font-semibold">Client Projects</h1>
-          <EnrollForm clientId={clientData?._id} onProjectEnrolled={fetchClient} />
+          <h1 className="text-lg font-semibold">Client Enrolled Projects</h1>
+          <EnrollForm
+            clientId={clientData?._id}
+            onProjectEnrolled={fetchClient}
+          />
         </div>
         {clientData?.programEnrolled?.length === 0 ? (
           <div className="flex flex-col gap-2">
@@ -53,9 +78,9 @@ const ViewClient = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            {clientData?.programEnrolled?.map((project: any) => (
-              <div key={project._id} className="flex flex-col gap-2">
-                <p className="text-sm font-semibold">Project Name:</p>
+            {clientData?.programEnrolled?.map((project: any, index: number) => (
+              <div key={project._id} className="flex flex-row gap-2">
+                <p className="text-sm font-semibold">{index + 1} :</p>
                 <p className="text-sm">{project.name}</p>
               </div>
             ))}
