@@ -16,12 +16,13 @@ app.use(express.json());
 // Parsing cookies from the request
 app.use(cookieParser());
 
-
 // Allow Cross-Origin Resource Sharing (CORS) for all origins
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Assign port value with fallback to 8000
 const PORT = process.env.PORT_URL || 8000;
