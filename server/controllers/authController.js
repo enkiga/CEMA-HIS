@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken"); // Import JWT for token generation
 const Doctor = require("../models/doctor"); // Import the Doctor modelconst { StatusCodes } = require("http-status-codes"); // Import status codes for HTTP responses
 const { doHash, doHashValidation } = require("../utils/hashing"); // Import hashing utility functions
 const { registrationSchema, loginSchema } = require("../middlewares/validator"); // Import validation schema
-const doctor = require("../models/doctor");
 
 // Handle signup process for doctors
 exports.signup = async (req, res) => {
