@@ -33,17 +33,19 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error(`MongoDB connection error: ${err}`));
 
-// Test if server is running
-// app.get("/", (req, res) => {
-//   res.send("Server is running!");
-// });
-
 // Set up routes
 app.use("/api/v1/auth", authRouter); // Authentication routes
 app.use("/api/v1/program", programRouter); // Program routes
 app.use("/api/v1/client", clientRouter); // Client routes
 
+// Test if server is running
+app.get("/", (req, res) => {
+  res.json({
+    message: "CEMA HIS Server is running",
+  });
+});
+
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  console.log("listening ...");
 });
