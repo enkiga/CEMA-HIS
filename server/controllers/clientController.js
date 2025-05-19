@@ -1,6 +1,6 @@
 const { clientCreationSchema } = require("../middlewares/validator");
 const Client = require("../models/client"); // Import the Client model
-const Program = require("../models/Program"); // Import the Program model
+const Program = require("../models/program"); // Import the Program model
 const mongoose = require("mongoose"); // Import mongoose for ObjectId validation
 
 exports.addClient = async (req, res) => {

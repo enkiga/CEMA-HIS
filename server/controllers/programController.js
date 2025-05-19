@@ -1,5 +1,5 @@
 const { programCreationSchema } = require("../middlewares/validator");
-const Program = require("../models/Program"); // Import the Program model
+const Program = require("../models/program")
 const Client = require("../models/client"); // Import the Client model
 
 exports.createProgram = async (req, res) => {
